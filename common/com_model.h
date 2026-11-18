@@ -102,18 +102,18 @@ typedef enum
 //		SPRITE MODEL DEFS
 //
 //==============================
-typedef enum { SPR_SINGLE = 0, SPR_GROUP } spriteframetype_t;
+// typedef enum { SPR_SINGLE = 0, SPR_GROUP } spriteframetype_t;
 
-#define SPR_VP_PARALLEL_UPRIGHT			0
-#define SPR_FACING_UPRIGHT				1
-#define SPR_VP_PARALLEL					2
-#define SPR_ORIENTED					3
-#define SPR_VP_PARALLEL_ORIENTED		4
+// #define SPR_VP_PARALLEL_UPRIGHT			0
+// #define SPR_FACING_UPRIGHT				1
+// #define SPR_VP_PARALLEL					2
+// #define SPR_ORIENTED					3
+// #define SPR_VP_PARALLEL_ORIENTED		4
 
-#define SPR_NORMAL						0
-#define SPR_ADDITIVE					1
-#define SPR_INDEXALPHA					2
-#define SPR_ALPHTEST					3
+// #define SPR_NORMAL						0
+// #define SPR_ADDITIVE					1
+// #define SPR_INDEXALPHA					2
+// #define SPR_ALPHTEST					3
 
 //==============================
 //		SPRITE MODEL STRUCTS
