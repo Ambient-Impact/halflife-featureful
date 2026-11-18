@@ -10,7 +10,7 @@
 #define STUDIOMODELRENDERER_H
 
 // STENCIL SHADOWS BEGIN
-#include <windows.h>
+#include "windows_lean.h"
 
 #include "elight.h"
 #include "svdformat.h"
