@@ -233,6 +233,9 @@ if(WIN32)
 	endif()
 endif()
 
+find_package(OpenGL)
+target_link_libraries(${CLDLL_LIBRARY} PRIVATE OpenGL::OpenGL)
+
 set_target_properties (${CLDLL_LIBRARY} PROPERTIES
 	POSITION_INDEPENDENT_CODE 1)
 
