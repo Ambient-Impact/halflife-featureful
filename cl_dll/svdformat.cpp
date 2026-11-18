@@ -264,17 +264,17 @@ SVD_SetVertexes
 void SVD_SetVertexes( svdsubmodel_t* psubmodel, mstudiomodel_t* pstsubmodel, studiohdr_t* phdr )
 {
 	// Get pointers to vertex data
-	vec3_t* pstudioverts = (vec3_t *)((byte *)phdr + pstsubmodel->vertindex);
+	Vector* pstudioverts = (Vector *)((byte *)phdr + pstsubmodel->vertindex);
 	byte* pvertbones = (byte *)((byte *)phdr + pstsubmodel->vertinfoindex);
 
 	// Allocate and copy vertex data
 	psubmodel->vertexindex = g_iSVDDataOffset;
 	psubmodel->numverts = pstsubmodel->numverts;
 
-	vec3_t* pdestverts = (vec3_t *)((byte *)g_pSVDBufferData + g_iSVDDataOffset);
-	g_iSVDDataOffset += sizeof(vec3_t)*psubmodel->numverts;
+	Vector* pdestverts = (Vector *)((byte *)g_pSVDBufferData + g_iSVDDataOffset);
+	g_iSVDDataOffset += sizeof(Vector)*psubmodel->numverts;
 
-	memcpy(pdestverts, pstudioverts, sizeof(vec3_t)*psubmodel->numverts);
+	memcpy(pdestverts, pstudioverts, sizeof(Vector)*psubmodel->numverts);
 
 	// Allocate and copy vertex bone info
 	psubmodel->vertinfoindex = g_iSVDDataOffset;

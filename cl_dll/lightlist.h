@@ -69,15 +69,15 @@ public:
 	int MsgFunc_LightSource( const char *pszName, int iSize, void *pBuf );
 
 	// Adds a light to the list
-	void AddLight( int entindex, const vec3_t& origin, const vec3_t& color, float radius, bool isTemporary );
+	void AddLight( int entindex, const Vector& origin, const Vector& color, float radius, bool isTemporary );
 	// Removes a light from the list
 	void RemoveLight( int entindex );
 
 	// Returns a list of lights for an entity
-	void GetLightList( vec3_t& origin, const vec3_t& mins, const vec3_t& maxs, elight_t** lightArray, unsigned int* numLights );
+	void GetLightList( Vector& origin, const Vector& mins, const Vector& maxs, elight_t** lightArray, unsigned int* numLights );
 
 	// Performs bbox check for elight
-	bool CheckBBox( elight_t* plight, const vec3_t& vmins, const vec3_t& vmaxs );
+	bool CheckBBox( elight_t* plight, const Vector& vmins, const Vector& vmaxs );
 
 private:
 	// Elights kept in memory

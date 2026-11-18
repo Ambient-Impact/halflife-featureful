@@ -60,8 +60,8 @@ model_t*	g_pWorld;
 int			g_visFrame = 0;
 int			g_frameCount = 0;
 
-vec3_t		g_viewOrigin;
-vec3_t		g_viewAngles;
+Vector		g_viewOrigin;
+Vector		g_viewAngles;
 
 bool		g_bFBOSupported = false;
 bool		g_useMSAA = true;
@@ -126,7 +126,7 @@ Mod_PointInLeaf
 
 ====================
 */
-void RotatePointAroundVector( vec3_t& vDest, const vec3_t& vDir, const vec3_t& vPoint, float flDegrees )
+void RotatePointAroundVector( Vector& vDest, const Vector& vDir, const Vector& vPoint, float flDegrees )
 {
 	float q[3];
 	float q3;
@@ -174,7 +174,7 @@ BoxOnPlaneSide
 
 ==================
 */
-int BoxOnPlaneSide( const vec3_t& emins, const vec3_t& emaxs, mplane_t *p )
+int BoxOnPlaneSide( const Vector& emins, const Vector& emaxs, mplane_t *p )
 {
 	float	dist1, dist2;
 	int		sides;
@@ -233,9 +233,9 @@ R_SetFrustum
 
 ====================
 */
-void R_SetFrustum( const vec3_t& vAngles, const vec3_t& vOrigin, float flFOV, float flFarDist )
+void R_SetFrustum( const Vector& vAngles, const Vector& vOrigin, float flFOV, float flFarDist )
 {
-	vec3_t vVpn, vUp, vRight;
+	Vector vVpn, vUp, vRight;
 	gEngfuncs.pfnAngleVectors(vAngles, vVpn, vRight, vUp);
 
 	RotatePointAroundVector(g_frustumPlanes[0].normal, vUp, vVpn, -(90-flFOV / 2));
@@ -257,7 +257,7 @@ R_CullBox
 
 =====================
 */
-bool R_CullBox( const vec3_t& vMins, const vec3_t& vMaxs )
+bool R_CullBox( const Vector& vMins, const Vector& vMaxs )
 {	
 	for(int i = 0; i < 4; i++)
 	{
@@ -274,7 +274,7 @@ Mod_PointInLeaf
 
 ====================
 */
-mleaf_t *Mod_PointInLeaf (vec3_t p, model_t *model) // quake's func
+mleaf_t *Mod_PointInLeaf (Vector p, model_t *model) // quake's func
 {
 	mnode_t *node = model->nodes;
 	while (1)
@@ -534,8 +534,8 @@ void SVD_DrawBrushModel ( cl_entity_t *pentity )
 {
 	model_t *pmodel = pentity->model;
 
-	vec3_t vlocalview;
-	vec3_t vmins, vmaxs;
+	Vector vlocalview;
+	Vector vmins, vmaxs;
 
 	// set model-local view origin
 	VectorCopy(g_viewOrigin, vlocalview);
@@ -561,7 +561,7 @@ void SVD_DrawBrushModel ( cl_entity_t *pentity )
 
 	if(pentity->angles[0] || pentity->angles[1] || pentity->angles[2])
 	{
-		vec3_t	vtemp, vforward, vright, vup;
+		Vector	vtemp, vforward, vright, vup;
 		VectorCopy(vlocalview, vtemp);
 		AngleVectors(pentity->angles, vforward, vright, vup);
 		vlocalview[0] = DotProduct(vtemp, vforward);

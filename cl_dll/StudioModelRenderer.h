@@ -131,7 +131,7 @@ public:
 	virtual void StudioGetLightSources(void);
 
 	// Sets bounding box
-	virtual void StudioGetMinsMaxs(vec3_t& outMins, vec3_t& outMaxs);
+	virtual void StudioGetMinsMaxs(Vector& outMins, Vector& outMaxs);
 
 	// Sets up bodypart pointers
 	virtual void StudioSetupModelSVD(int bodypart);
@@ -293,14 +293,14 @@ public:
 	// Closest entity light
 	int                m_iClosestLight;
 	// Shadowing light's origin
-	vec3_t            m_vShadowLightOrigin;
+	Vector            m_vShadowLightOrigin;
 	// Shadowing light vector
-	vec3_t            m_vShadowLightVector;
+	Vector            m_vShadowLightVector;
 	// Type of shadow light source
 	shadow_lightype_t m_shadowLightType;
 
 	// Array of transformed vertexes
-	vec3_t            m_vertexTransform[MAXSTUDIOVERTS * 2];
+	Vector            m_vertexTransform[MAXSTUDIOVERTS * 2];
 
 	// Toggles rendering of stencil shadows
 	cvar_t*            m_pCvarDrawStencilShadows;

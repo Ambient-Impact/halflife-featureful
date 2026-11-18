@@ -14,12 +14,12 @@ struct elight_t
 {
 	int entindex;
 
-	vec3_t origin;
-	vec3_t color;
+	Vector origin;
+	Vector color;
 	float radius;
 
-	vec3_t mins;
-	vec3_t maxs;
+	Vector mins;
+	Vector maxs;
 
 	bool temporary;
 };

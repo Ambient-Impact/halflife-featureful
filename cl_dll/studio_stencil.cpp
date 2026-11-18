@@ -127,7 +127,7 @@ StudioGetMinsMaxs
 
 ====================
 */
-void CStudioModelRenderer::StudioGetMinsMaxs ( vec3_t& outMins, vec3_t& outMaxs )
+void CStudioModelRenderer::StudioGetMinsMaxs ( Vector& outMins, Vector& outMaxs )
 {
 	if (m_pCurrentEntity->curstate.sequence >=  m_pStudioHeader->numseq) 
 		m_pCurrentEntity->curstate.sequence = 0;
@@ -135,8 +135,8 @@ void CStudioModelRenderer::StudioGetMinsMaxs ( vec3_t& outMins, vec3_t& outMaxs 
 	// Build full bounding box
 	mstudioseqdesc_t *pseqdesc = (mstudioseqdesc_t *)((byte *)m_pStudioHeader + m_pStudioHeader->seqindex) + m_pCurrentEntity->curstate.sequence;
 
-	vec3_t vTemp;
-	static vec3_t vBounds[8];
+	Vector vTemp;
+	static Vector vBounds[8];
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -188,7 +188,7 @@ StudioEntityLight
 */
 void CStudioModelRenderer::StudioGetLightSources ( void )
 {
-	vec3_t mins, maxs;
+	Vector mins, maxs;
 	StudioGetMinsMaxs(mins, maxs);
 
 	// Get elight list
@@ -200,7 +200,7 @@ void CStudioModelRenderer::StudioGetLightSources ( void )
 	if(!m_iNumEntityLights)
 		return;
 
-	vec3_t transOrigin;
+	Vector transOrigin;
 	float flClosestDist = -1;
 
 	// Find closest light origin
@@ -239,7 +239,7 @@ void CStudioModelRenderer::StudioSetupShadows( void )
 	// Determine the shading angle
 	if(m_iClosestLight == -1)
 	{
-		vec3_t mins, maxs;
+		Vector mins, maxs;
 		StudioGetMinsMaxs(mins, maxs);
 
 		Vector skyVec;
@@ -254,7 +254,7 @@ void CStudioModelRenderer::StudioSetupShadows( void )
 		model_t* pworld = IEngineStudio.GetModelByIndex(1);
 		const msurface_t* phitsurf = Mod_SurfaceAtPoint(pworld, pworld->nodes, center, end);
 		
-		vec3_t shadeVector;
+		Vector shadeVector;
 		if(phitsurf && phitsurf->flags & SURF_DRAWSKY)
 		{
 			// Hit by sky
@@ -355,7 +355,7 @@ void CStudioModelRenderer::StudioDrawShadow ( void )
 	glClientActiveTexture(GL_TEXTURE0);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	glVertexPointer( 3, GL_FLOAT, sizeof(vec3_t), m_vertexTransform );
+	glVertexPointer( 3, GL_FLOAT, sizeof(Vector), m_vertexTransform );
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	// Set SVD header
@@ -403,13 +403,13 @@ StudioDrawShadowVolume
 void CStudioModelRenderer::StudioDrawShadowVolume( void )
 {
 	float plane[4];
-	vec3_t lightdir;
-	vec3_t *pv1, *pv2, *pv3;
+	Vector lightdir;
+	Vector *pv1, *pv2, *pv3;
 
 	if (!m_pSVDSubModel->numfaces)
 		return;
 
-	vec3_t *psvdverts = (vec3_t *)((byte *)m_pSVDHeader + m_pSVDSubModel->vertexindex);
+	Vector *psvdverts = (Vector *)((byte *)m_pSVDHeader + m_pSVDSubModel->vertexindex);
 	byte *pvertbone = ((byte *)m_pSVDHeader + m_pSVDSubModel->vertinfoindex);
 
 	// Extrusion distance

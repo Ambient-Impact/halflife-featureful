@@ -93,7 +93,7 @@ void COM_ToLowerCase( char* pstr )
 //===========================================
 void __CmdFunc_MakeLight( void )
 {
-	vec3_t lightColor;
+	Vector lightColor;
 	int entIndex = atoi(gEngfuncs.Cmd_Argv(1));
 	lightColor[0] = atof(gEngfuncs.Cmd_Argv(2))/255.0f;
 	lightColor[1] = atof(gEngfuncs.Cmd_Argv(3))/255.0f;
@@ -159,7 +159,7 @@ AddEntityLight
 
 ====================
 */
-void CLightList::AddLight( int entindex, const vec3_t& origin, const vec3_t& color, float radius, bool isTemporary )
+void CLightList::AddLight( int entindex, const Vector& origin, const Vector& color, float radius, bool isTemporary )
 {
 	elight_t* plight = NULL;
 	for(int i = 0; i < m_iNumEntityLights; i++)
@@ -231,7 +231,7 @@ GetLightList
 
 ====================
 */
-void CLightList::GetLightList( vec3_t& origin, const vec3_t& mins, const vec3_t& maxs, elight_t** lightArray, unsigned int* numLights )
+void CLightList::GetLightList( Vector& origin, const Vector& mins, const Vector& maxs, elight_t** lightArray, unsigned int* numLights )
 {
 	// Set this to zero
 	*numLights = NULL;
@@ -283,7 +283,7 @@ CheckBBox
 
 ====================
 */
-bool CLightList::CheckBBox( elight_t* plight, const vec3_t& vmins, const vec3_t& vmaxs )
+bool CLightList::CheckBBox( elight_t* plight, const Vector& vmins, const Vector& vmaxs )
 {
 	if (vmins[0] > plight->maxs[0]) 
 		return true;
@@ -325,7 +325,7 @@ void CLightList::CalcRefDef( void )
 		if(!pdlight->radius || pdlight->die < fltime)
 			continue;
 
-		vec3_t lightColor;
+		Vector lightColor;
 		lightColor.x = (float)pdlight->color.r/255.0f;
 		lightColor.y = (float)pdlight->color.g/255.0f;
 		lightColor.z = (float)pdlight->color.b/255.0f;
@@ -339,7 +339,7 @@ void CLightList::CalcRefDef( void )
 		if(!pdlight->radius || pdlight->die < fltime)
 			continue;
 
-		vec3_t lightColor;
+		Vector lightColor;
 		lightColor.x = (float)pdlight->color.r/255.0f;
 		lightColor.y = (float)pdlight->color.g/255.0f;
 		lightColor.z = (float)pdlight->color.b/255.0f;
@@ -421,11 +421,11 @@ int CLightList::MsgFunc_LightSource( const char *pszName, int iSize, void *pBuf 
 		return 1;
 	}
 
-	vec3_t origin;
+	Vector origin;
 	for(int i = 0; i < 3; i++)
 		origin[i] = READ_COORD();
 
-	vec3_t color;
+	Vector color;
 	for(int i = 0; i < 3; i++)
 		color[i] = (float)READ_BYTE()/255.0f;
 
