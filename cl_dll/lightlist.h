@@ -15,7 +15,7 @@
 #include <vector>
 #include "com_model.h"
 
-#include "gl_dynamic.h"
+#include <GL/gl.h>
 #include "gl/glext.h"
 
 #define MAX_ENTITY_LIGHTS		1024 // Arbitrary

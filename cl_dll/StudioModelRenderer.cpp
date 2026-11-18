@@ -9,7 +9,7 @@
 // routines for setting up to draw 3DStudio models
 
 #include "windows_lean.h"
-#include "gl_dynamic.h"
+#include <GL/gl.h>
 
 #include <cstdlib>
 #include "hud.h"
