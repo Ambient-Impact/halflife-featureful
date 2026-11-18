@@ -22,8 +22,13 @@
 #pragma warning( disable: 4005 )
 
 // com_model.h
+#pragma once
 #if !defined( COM_MODEL_H )
 #define COM_MODEL_H
+
+#include "common_types.h"
+#include "vector.h"
+
 #if defined( _WIN32 )
 #pragma once
 #endif
@@ -300,6 +305,8 @@ typedef struct mnode_s
 #endif
 
 
+typedef struct msurface_s   msurface_t;
+typedef struct decal_s      decal_t;
 
 // JAY: Compress this as much as possible
 struct decal_s
@@ -498,6 +505,8 @@ typedef struct model_s
 	int			numframes;
 	synctype_t	synctype;
 
+	int			flags;
+
 //
 // volume occupied by the model
 //		
@@ -531,6 +540,7 @@ typedef struct model_s
 	mtexinfo_t	*texinfo;
 
 	int			numsurfaces;
+	msurface_t	*surfaces;
 
 	int			numsurfedges;
 	int			*surfedges;
