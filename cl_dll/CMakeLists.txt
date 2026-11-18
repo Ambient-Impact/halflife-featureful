@@ -242,7 +242,7 @@ endif()
 find_package(OpenGL REQUIRED)
 
 target_link_libraries(${CLDLL_LIBRARY} ${OPENGL_LIBRARIES})
-target_include_directories(${CLDLL_LIBRARY} PRIVATE ${OPENGL_INCLUDE_DIR})
+target_include_directories(${CLDLL_LIBRARY} PUBLIC ${OPENGL_INCLUDE_DIR})
 
 set_target_properties (${CLDLL_LIBRARY} PROPERTIES
 	POSITION_INDEPENDENT_CODE 1)
