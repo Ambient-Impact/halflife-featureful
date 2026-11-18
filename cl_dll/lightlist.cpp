@@ -18,7 +18,7 @@
 // implementation of CHudAmmo class
 //
 
-#include <Windows.h>
+#include "windows_lean.h"
 
 #include "hud.h"
 #include "cl_util.h"

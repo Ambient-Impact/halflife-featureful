@@ -8,7 +8,7 @@
 #ifndef LIGHT_LIST_H
 #define LIGHT_LIST_H
 
-#include <Windows.h>
+#include "windows_lean.h"
 
 #include "elight.h"
 #include "dlight.h"
