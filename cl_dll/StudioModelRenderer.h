@@ -14,7 +14,7 @@
 
 #include "elight.h"
 #include "svdformat.h"
-#include "gl/gl.h"
+#include "gl_dynamic.h"
 #include "gl/glext.h"
 
 enum shadow_lightype_t
