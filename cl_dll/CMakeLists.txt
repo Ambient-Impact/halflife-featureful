@@ -233,8 +233,16 @@ if(WIN32)
 	endif()
 endif()
 
-find_package(OpenGL)
-target_link_libraries(${CLDLL_LIBRARY} PRIVATE OpenGL::OpenGL)
+# for some reason it can't find these libraries, even when installed?
+if (LINUX)
+    set(OPENGL_gl_LIBRARY /usr/lib/i386-linux-gnu/libGL.so)
+    set(OPENGL_glx_LIBRARY /usr/lib/i386-linux-gnu/libGLX.so)
+endif()
+
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${CLDLL_LIBRARY} ${OPENGL_LIBRARIES})
+target_include_directories(${CLDLL_LIBRARY} ${OPENGL_INCLUDE_DIR})
 
 set_target_properties (${CLDLL_LIBRARY} PROPERTIES
 	POSITION_INDEPENDENT_CODE 1)
