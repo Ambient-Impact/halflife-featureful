@@ -120,39 +120,39 @@ typedef enum
 //
 //==============================
 
-typedef struct mspriteframe_s
-{
-    int		width;
-    int		height;
-    float	up, down, left, right;
-    int		gl_texturenum;
-} mspriteframe_t;
+// typedef struct mspriteframe_s
+// {
+//     int		width;
+//     int		height;
+//     float	up, down, left, right;
+//     int		gl_texturenum;
+// } mspriteframe_t;
 
-typedef struct
-{
-    int				numframes;
-    float* intervals;
-    mspriteframe_t* frames[1];
-} mspritegroup_t;
+// typedef struct
+// {
+//     int				numframes;
+//     float* intervals;
+//     mspriteframe_t* frames[1];
+// } mspritegroup_t;
 
-typedef struct
-{
-    spriteframetype_t	type;
-    mspriteframe_t* frameptr;
-} mspriteframedesc_t;
+// typedef struct
+// {
+//     spriteframetype_t	type;
+//     mspriteframe_t* frameptr;
+// } mspriteframedesc_t;
 
-typedef struct
-{
-    short				type;
-    short				texFormat;
-    int					maxwidth;
-    int					maxheight;
-    int					numframes;
-    int					radius;
-    int					beamlength;
-    int					synctype;
-    mspriteframedesc_t	frames[1];
-} msprite_t;
+// typedef struct
+// {
+//     short				type;
+//     short				texFormat;
+//     int					maxwidth;
+//     int					maxheight;
+//     int					numframes;
+//     int					radius;
+//     int					beamlength;
+//     int					synctype;
+//     mspriteframedesc_t	frames[1];
+// } msprite_t;
 
 
 typedef struct
