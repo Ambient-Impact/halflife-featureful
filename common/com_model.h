@@ -76,7 +76,7 @@
 #define	PLANE_Y			1
 #define	PLANE_Z			2
 
-#define CACHE_SIZE  32      // used to align key data structures
+// #define CACHE_SIZE  32      // used to align key data structures
 
 typedef enum
 {
