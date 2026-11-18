@@ -35,6 +35,13 @@
 #include "tex_materials.h"
 #include "hl_palette.h"
 
+// STENCIL SHADOWS BEGIN
+#include "lightlist.h"
+#include "svd_render.h"
+#include "svdformat.h"
+#include "svd_render.h"
+// STENCIL SHADOWS END
+
 extern bool m_bCacheFullbrightModels;
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
@@ -940,6 +947,10 @@ void CHud::Init()
 	ClientCmd( "richpresence_gamemode\n" );
 	ClientCmd( "richpresence_update\n" );
 
+	// STENCIL SHADOWS BEGIN
+	gLightList.Init();
+	// STENCIL SHADOWS END
+
 	if (g_errorCollector.HasErrors())
 	{
 		m_ErrorCollection.SetClientErrors(g_errorCollector.GetFullString());
@@ -1320,6 +1331,11 @@ CHud::~CHud()
 		}
 		m_pHudList = NULL;
 	}
+
+	// STENCIL SHADOWS BEGIN
+	SVD_Shutdown();
+	// STENCIL SHADOWS END
+
 }
 
 // GetSpriteIndex()
@@ -1510,6 +1526,10 @@ void CHud::VidInit()
 	m_TextMessage.VidInit();
 	m_StatusIcons.VidInit();
 	GetClientVoiceMgr()->VidInit();
+	// STENCIL SHADOWS BEGIN
+	gLightList.VidInit();
+	SVD_VidInit();
+	// STENCIL SHADOWS END
 	m_MOTD.VidInit();
 	m_Scoreboard.VidInit();
 	m_Journal.VidInit();

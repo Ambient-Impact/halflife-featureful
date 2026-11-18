@@ -267,6 +267,10 @@ int gmsgStatusText = 0;
 int gmsgStatusValue = 0;
 int gmsgStatusIcon = 0;
 
+// STENCIL SHADOWS BEGIN
+int gmsgLightSource = 0;
+// STENCIL SHADOWS END
+
 int gmsgRandomGibs = 0;
 int gmsgMuzzleLight = 0;
 int gmsgCustomBeam = 0;
@@ -446,6 +450,11 @@ void LinkUserMessages()
 	gmsgCombatText = REG_USER_MSG("CombatText", 11);
 	gmsgHudHint = REG_USER_MSG("HudHint", -1);
 	gmsgMirror = REG_USER_MSG("Mirror", 10);
+
+	// STENCIL SHADOWS BEGIN
+	gmsgLightSource = REG_USER_MSG("LightSource", -1);
+	// STENCIL SHADOWS END
+
 }
 
 LINK_ENTITY_TO_CLASS( player, CBasePlayer )
@@ -4486,6 +4495,11 @@ void CBasePlayer::Precache()
 
 	pev->fov = m_iFOV;	// Vit_amiN: restore the FOV on level change or map/saved game load
 	m_movementState = MovementStand;
+
+	// STENCIL SHADOWS BEGIN
+	m_sentInitMessages = FALSE;
+	// STENCIL SHADOWS END
+
 }
 
 int CBasePlayer::Save( CSave &save )
@@ -5634,6 +5648,15 @@ reflecting all of the HUD state info.
 */
 void CBasePlayer::UpdateClientData()
 {
+
+	// STENCIL SHADOWS BEGIN
+	if (!m_sentInitMessages)
+	{
+		InitializeEntities();
+		m_sentInitMessages = true;
+	}
+	// STENCIL SHADOWS END
+
 	if( m_fInitHUD )
 	{
 		m_fInitHUD = false;
@@ -6413,6 +6436,29 @@ void CBasePlayer::GatherAndSendObjectHints()
 		}
 	}
 }
+
+// STENCIL SHADOWS BEGIN
+//=========================================================
+// InitializeEntities
+//=========================================================
+void CBasePlayer :: InitializeEntities ( void )
+{
+    edict_t* pEdict = g_engfuncs.pfnPEntityOfEntIndex( 1 );
+    CBaseEntity* pEntity;
+
+    for(int i = 0; i < gpGlobals->maxEntities; i++, pEdict++)
+    {
+        if(pEdict->free)
+            continue;
+
+        pEntity = CBaseEntity::Instance( pEdict );
+        if(!pEntity)
+            break;
+
+        pEntity->SendInitMessages(this);
+    }
+}
+// STENCIL SHADOWS END
 
 //=========================================================
 // FBecomeProne - Overridden for the player to set the proper

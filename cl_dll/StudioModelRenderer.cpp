@@ -95,6 +95,20 @@ void CStudioModelRenderer::Init()
 	m_plighttransform		= (float (*)[MAXSTUDIOBONES][3][4])IEngineStudio.StudioGetLightTransform();
 	m_paliastransform		= (float (*)[3][4])IEngineStudio.StudioGetAliasTransform();
 	m_protationmatrix		= (float (*)[3][4])IEngineStudio.StudioGetRotationMatrix();
+
+	// STENCIL SHADOWS BEGIN
+	m_pSkylightDirX            = IEngineStudio.GetCvar( "sv_skyvec_x" );
+	m_pSkylightDirY            = IEngineStudio.GetCvar( "sv_skyvec_y" );
+	m_pSkylightDirZ            = IEngineStudio.GetCvar( "sv_skyvec_z" );
+
+	m_pSkylightColorR            = IEngineStudio.GetCvar( "sv_skycolor_r" );
+	m_pSkylightColorG            = IEngineStudio.GetCvar( "sv_skycolor_g" );
+	m_pSkylightColorB            = IEngineStudio.GetCvar( "sv_skycolor_b" );
+
+	m_pCvarDrawStencilShadows = CVAR_CREATE("r_shadows_stencil", "1", FCVAR_ARCHIVE);
+	m_pCvarShadowVolumeExtrudeDistance = CVAR_CREATE("r_shadow_extrude_distance", "2048", FCVAR_ARCHIVE);
+	// STENCIL SHADOWS END
+
 }
 
 /*
@@ -123,6 +137,33 @@ CStudioModelRenderer::CStudioModelRenderer()
 	m_pSubModel		= NULL;
 	m_pPlayerInfo		= NULL;
 	m_pRenderModel		= NULL;
+
+	// STENCIL SHADOWS BEGIN
+	m_pCvarDrawStencilShadows    = NULL;
+	m_pCvarShadowVolumeExtrudeDistance = NULL;
+	m_iClosestLight                = 0;
+	m_iNumEntityLights            = 0;
+	m_pSkylightColorR            = NULL;
+	m_pSkylightColorG            = NULL;
+	m_pSkylightColorB            = NULL;
+	m_pSkylightDirX                = NULL;
+	m_pSkylightDirY                = NULL;
+	m_pSkylightDirZ                = NULL;
+	m_pSVDSubModel                = NULL;
+	m_pSVDHeader                = NULL;
+	m_shadowLightType            = SL_TYPE_LIGHTVECTOR;
+
+	memset(m_pEntityLights, 0, sizeof(m_pEntityLights));
+
+	glActiveTexture = (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTexture");
+	glClientActiveTexture = (PFNGLCLIENTACTIVETEXTUREPROC)wglGetProcAddress("glClientActiveTexture");
+	glActiveStencilFaceEXT = (PFNGLACTIVESTENCILFACEEXTPROC)wglGetProcAddress("glActiveStencilFaceEXT");
+
+	if (glActiveStencilFaceEXT)
+		m_bTwoSideSupported = true;
+	else
+		m_bTwoSideSupported = false;
+	// STENCIL SHADOWS END
 }
 
 /*
@@ -1768,6 +1809,10 @@ StudioRenderModel
 */
 void CStudioModelRenderer::StudioRenderModel()
 {
+	// STENCIL SHADOWS BEGIN
+	StudioSetupShadows();
+	// STENCIL SHADOWS END
+
 	IEngineStudio.SetChromeOrigin();
 	IEngineStudio.SetForceFaceFlags( 0 );
 
@@ -1888,6 +1933,14 @@ StudioRenderFinal_Hardware
 */
 void CStudioModelRenderer::StudioRenderFinal_Hardware()
 {
+
+	// STENCIL SHADOWS BEGIN
+	if( StudioShouldDrawShadow() )
+	{
+		StudioDrawShadow();
+	}
+	// STENCIL SHADOWS END
+
 	int i;
 	int rendermode;
 
@@ -2228,6 +2281,11 @@ void CStudioModelRenderer::HandlePlayerModel(entity_state_t *pplayer, alight_t& 
 
 		model_t *pweaponmodel = IEngineStudio.GetModelByIndex( pplayer->weaponmodel );
 
+		// STENCIL SHADOWS BEGIN
+		model_t* psavedrendermodel = m_pRenderModel;
+		m_pRenderModel = pweaponmodel;
+		// STENCIL SHADOWS END
+
 		m_pStudioHeader = (studiohdr_t *)IEngineStudio.Mod_Extradata( pweaponmodel );
 		IEngineStudio.StudioSetHeader( m_pStudioHeader );
 
@@ -2238,6 +2296,9 @@ void CStudioModelRenderer::HandlePlayerModel(entity_state_t *pplayer, alight_t& 
 		StudioRenderModel();
 		StudioCalcAttachments();
 		*m_pCurrentEntity = saveent;
+		// STENCIL SHADOWS BEGIN
+		m_pRenderModel = psavedrendermodel;
+		// STENCIL SHADOWS END
 	}
 }
 
@@ -2262,6 +2323,10 @@ void CStudioModelRenderer::SetRemapColorsForPlayer()
 void CStudioModelRenderer::SetupLighting(alight_t& lighting)
 {
 	IEngineStudio.StudioDynamicLight(m_pCurrentEntity, &lighting);
+
+	// STENCIL SHADOWS BEGIN
+	StudioGetLightSources();
+	// STENCIL SHADOWS END
 
 	if (m_pCurrentEntity->curstate.effects & EF_MODEL_BRIGHT)
 	{

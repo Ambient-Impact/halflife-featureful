@@ -20,6 +20,10 @@
 #include "StudioModelRenderer.h"
 #include "GameStudioModelRenderer.h"
 
+// STENCIL SHADOWS BEGIN
+#include "svd_render.h"
+// STENCIL SHADOWS END
+
 //
 // Override the StudioModelRender virtual member functions here to implement custom bone
 // setup, blending, etc.
@@ -75,6 +79,9 @@ R_StudioInit
 void R_StudioInit()
 {
 	g_StudioRenderer.Init();
+	// STENCIL SHADOWS BEGIN
+	SVD_Init();
+	// STENCIL SHADOWS END
 }
 
 // The simple drawing interface we'll pass back to the engine

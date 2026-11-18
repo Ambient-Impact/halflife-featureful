@@ -426,6 +426,10 @@ public:
 	virtual bool IsNetClient() { return false; }
 	virtual const char *TeamID() { return ""; }
 
+	// STENCIL SHADOWS BEGIN
+	virtual void SendInitMessages(CBaseEntity* pPlayer = NULL) {};
+	// STENCIL SHADOWS END
+
 	//virtual void SetActivator( CBaseEntity *pActivator ) {}
 	virtual CBaseEntity *GetNextTarget();
 	

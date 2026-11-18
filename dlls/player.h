@@ -447,6 +447,10 @@ public:
 	void SetCustomDecalFrames( int nFrames );
 	int GetCustomDecalFrames();
 
+	// STENCIL SHADOWS BEGIN
+	void InitializeEntities(void);
+	// STENCIL SHADOWS END
+
 	bool HandleDoorBlockage(CBaseEntity* pDoor) override;
 	bool ShouldCollideWithCorpses() override;
 
@@ -500,6 +504,10 @@ public:
 	float	m_flNextFlashlightFlick;
 	friend class CDisplacer;
 	friend class CTriggerXenReturn;
+
+	// STENCIL SHADOWS BEGIN
+	bool m_sentInitMessages;
+	// STENCIL SHADOWS END
 
 private:
 	enum {

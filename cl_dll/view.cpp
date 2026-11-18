@@ -25,6 +25,11 @@
 #include "hltv.h"
 #include "view.h"
 
+// STENCIL SHADOWS BEGIN
+#include "svd_render.h"
+#include "lightlist.h"
+// STENCIL SHADOWS END
+
 bool g_Paused = false;
 
 // Spectator Mode
@@ -1701,6 +1706,12 @@ void DLLEXPORT V_CalcRefdef( struct ref_params_s *pparams )
 	}
 #endif
 */
+
+	// STENCIL SHADOWS BEGIN
+	gLightList.CalcRefDef();
+	SVD_CalcRefDef(pparams);
+	// STENCIL SHADOWS END
+
 }
 
 /*

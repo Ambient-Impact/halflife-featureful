@@ -36,6 +36,11 @@ void UpdateBlowTorchEffect();
 #include "particleman.h"
 #include "environment.h"
 
+// STENCIL SHADOWS BEGIN
+#include "svd_render.h"
+#include "lightlist.h"
+// STENCIL SHADOWS END
+
 //#define TEST_IT	1
 #if TEST_IT
 
@@ -171,6 +176,11 @@ void DLLEXPORT HUD_DrawNormalTriangles()
 #if TEST_IT
 //	Draw_Triangles();
 #endif
+
+	// STENCIL SHADOWS BEGIN
+  gLightList.DrawNormal();
+	// STENCIL SHADOWS END
+
 }
 
 /*
@@ -199,4 +209,9 @@ void DLLEXPORT HUD_DrawTransparentTriangles()
 	}
 
 	UpdateBlowTorchEffect();
+
+	// STENCIL SHADOWS BEGIN
+	SVD_DrawTransparentTriangles();
+	// STENCIL SHADOWS END
+
 }
