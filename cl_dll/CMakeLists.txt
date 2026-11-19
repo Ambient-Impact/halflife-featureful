@@ -216,6 +216,17 @@ list(APPEND CLDLL_SOURCES
 	glew/src/glew.c
 )
 
+list(APPEND CLDLL_SOURCES
+  elight.h
+  lightlist.cpp
+  lightlist.h
+  studio_stencil.cpp
+  svd_render.cpp
+  svd_render.h
+  svdformat.cpp
+  svdformat.h
+)
+
 include_directories (. hl/ ../dlls ../dlls/wpn_shared ../common ../engine ../pm_shared ../game_shared ../public particleman/)
 
 if (GOLDSOURCE_SUPPORT)

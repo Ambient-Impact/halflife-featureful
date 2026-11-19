@@ -20,6 +20,8 @@
 #include "StudioModelRenderer.h"
 #include "GameStudioModelRenderer.h"
 
+#include "svd_render.h"
+
 //
 // Override the StudioModelRender virtual member functions here to implement custom bone
 // setup, blending, etc.
@@ -75,6 +77,7 @@ R_StudioInit
 void R_StudioInit()
 {
 	g_StudioRenderer.Init();
+	SVD_Init();
 }
 
 // The simple drawing interface we'll pass back to the engine

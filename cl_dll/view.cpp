@@ -25,6 +25,9 @@
 #include "hltv.h"
 #include "view.h"
 
+#include "svd_render.h"
+#include "lightlist.h"
+
 bool g_Paused = false;
 
 // Spectator Mode
@@ -1701,6 +1704,9 @@ void DLLEXPORT V_CalcRefdef( struct ref_params_s *pparams )
 	}
 #endif
 */
+
+	gLightList.CalcRefDef();
+	SVD_CalcRefDef(pparams);
 }
 
 /*

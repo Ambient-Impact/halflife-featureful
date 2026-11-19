@@ -8,6 +8,9 @@
 // studio_model.cpp
 // routines for setting up to draw 3DStudio models
 
+#define GLEW_STATIC 1
+#include "GL/glew.h"
+
 #include "windows_lean.h"
 #include "gl_dynamic.h"
 
@@ -95,6 +98,17 @@ void CStudioModelRenderer::Init()
 	m_plighttransform		= (float (*)[MAXSTUDIOBONES][3][4])IEngineStudio.StudioGetLightTransform();
 	m_paliastransform		= (float (*)[3][4])IEngineStudio.StudioGetAliasTransform();
 	m_protationmatrix		= (float (*)[3][4])IEngineStudio.StudioGetRotationMatrix();
+
+	m_pSkylightDirX = IEngineStudio.GetCvar("sv_skyvec_x");
+	m_pSkylightDirY = IEngineStudio.GetCvar("sv_skyvec_y");
+	m_pSkylightDirZ = IEngineStudio.GetCvar("sv_skyvec_z");
+
+	m_pSkylightColorR = IEngineStudio.GetCvar("sv_skycolor_r");
+	m_pSkylightColorG = IEngineStudio.GetCvar("sv_skycolor_g");
+	m_pSkylightColorB = IEngineStudio.GetCvar("sv_skycolor_b");
+
+	m_pCvarDrawStencilShadows = CVAR_CREATE("r_shadows_stencil", "1", FCVAR_ARCHIVE);
+	m_pCvarShadowVolumeExtrudeDistance = CVAR_CREATE("r_shadow_extrude_distance", "2048", FCVAR_ARCHIVE);
 }
 
 /*
@@ -123,6 +137,24 @@ CStudioModelRenderer::CStudioModelRenderer()
 	m_pSubModel		= NULL;
 	m_pPlayerInfo		= NULL;
 	m_pRenderModel		= NULL;
+
+	m_pCvarDrawStencilShadows = NULL;
+	m_pCvarShadowVolumeExtrudeDistance = NULL;
+	m_iClosestLight = 0;
+	m_iNumEntityLights = 0;
+	m_pSkylightColorR = NULL;
+	m_pSkylightColorG = NULL;
+	m_pSkylightColorB = NULL;
+	m_pSkylightDirX = NULL;
+	m_pSkylightDirY = NULL;
+	m_pSkylightDirZ = NULL;
+	m_pSVDSubModel = NULL;
+	m_pSVDHeader = NULL;
+	m_shadowLightType = SL_TYPE_LIGHTVECTOR;
+
+	memset(m_pEntityLights, 0, sizeof(m_pEntityLights));
+
+	m_bTwoSideSupported = glActiveStencilFaceEXT != nullptr;
 }
 
 /*
@@ -1768,6 +1800,8 @@ StudioRenderModel
 */
 void CStudioModelRenderer::StudioRenderModel()
 {
+	StudioSetupShadows();
+
 	IEngineStudio.SetChromeOrigin();
 	IEngineStudio.SetForceFaceFlags( 0 );
 
@@ -1890,6 +1924,11 @@ void CStudioModelRenderer::StudioRenderFinal_Hardware()
 {
 	int i;
 	int rendermode;
+
+	if (StudioShouldDrawShadow())
+	{
+		StudioDrawShadow();
+	}
 
 	rendermode = IEngineStudio.GetForceFaceFlags() ? kRenderTransAdd : m_pCurrentEntity->curstate.rendermode;
 	IEngineStudio.SetupRenderer( rendermode );
@@ -2079,6 +2118,9 @@ void CStudioModelRenderer::StudioRenderEntity(bool fullbright)
 	else
 	{
 		IEngineStudio.StudioDynamicLight(m_pCurrentEntity, &lighting);
+
+		StudioGetLightSources();
+
 		IEngineStudio.StudioEntityLight(&lighting);
 		// model and frame independant
 		IEngineStudio.StudioSetupLighting(&lighting);
@@ -2206,6 +2248,8 @@ void CStudioModelRenderer::HandlePlayerModel(entity_state_t *pplayer, alight_t& 
 		m_pCurrentEntity->curstate.body = 255;
 	}
 
+	StudioGetLightSources();
+
 	if( gEngfuncs.GetMaxClients() != 1 && ( m_pRenderModel == m_pCurrentEntity->model ) )
 	{
 		m_pCurrentEntity->curstate.body = 1; // force helmet
@@ -2228,6 +2272,9 @@ void CStudioModelRenderer::HandlePlayerModel(entity_state_t *pplayer, alight_t& 
 
 		model_t *pweaponmodel = IEngineStudio.GetModelByIndex( pplayer->weaponmodel );
 
+		model_t* psavedrendermodel = m_pRenderModel;
+		m_pRenderModel = pweaponmodel;
+
 		m_pStudioHeader = (studiohdr_t *)IEngineStudio.Mod_Extradata( pweaponmodel );
 		IEngineStudio.StudioSetHeader( m_pStudioHeader );
 
@@ -2238,6 +2285,7 @@ void CStudioModelRenderer::HandlePlayerModel(entity_state_t *pplayer, alight_t& 
 		StudioRenderModel();
 		StudioCalcAttachments();
 		*m_pCurrentEntity = saveent;
+		m_pRenderModel = psavedrendermodel;
 	}
 }
 

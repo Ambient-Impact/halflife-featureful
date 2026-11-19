@@ -35,6 +35,11 @@
 #include "tex_materials.h"
 #include "hl_palette.h"
 
+#include "lightlist.h"
+#include "svd_render.h"
+#include "svdformat.h"
+#include "svd_render.h"
+
 extern bool m_bCacheFullbrightModels;
 
 hud_player_info_t	 g_PlayerInfoList[MAX_PLAYERS+1];	   // player info from the engine
@@ -940,6 +945,8 @@ void CHud::Init()
 	ClientCmd( "richpresence_gamemode\n" );
 	ClientCmd( "richpresence_update\n" );
 
+	gLightList.Init();
+
 	if (g_errorCollector.HasErrors())
 	{
 		m_ErrorCollection.SetClientErrors(g_errorCollector.GetFullString());
@@ -1320,6 +1327,8 @@ CHud::~CHud()
 		}
 		m_pHudList = NULL;
 	}
+
+	SVD_Shutdown();
 }
 
 // GetSpriteIndex()
@@ -1531,6 +1540,9 @@ void CHud::VidInit()
 	m_lastCrosshairColor = m_cachedHudColor;
 
 	m_bCacheFullbrightModels = true;
+
+	gLightList.VidInit();
+	SVD_VidInit();
 }
 
 int CHud::MsgFunc_Logo( const char *pszName,  int iSize, void *pbuf )

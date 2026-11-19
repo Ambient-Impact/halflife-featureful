@@ -36,6 +36,9 @@ void UpdateBlowTorchEffect();
 #include "particleman.h"
 #include "environment.h"
 
+#include "svd_render.h"
+#include "lightlist.h"
+
 //#define TEST_IT	1
 #if TEST_IT
 
@@ -171,6 +174,8 @@ void DLLEXPORT HUD_DrawNormalTriangles()
 #if TEST_IT
 //	Draw_Triangles();
 #endif
+
+	gLightList.DrawNormal();
 }
 
 /*
@@ -199,4 +204,6 @@ void DLLEXPORT HUD_DrawTransparentTriangles()
 	}
 
 	UpdateBlowTorchEffect();
+
+	SVD_DrawTransparentTriangles();
 }
