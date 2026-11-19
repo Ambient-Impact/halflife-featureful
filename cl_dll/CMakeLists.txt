@@ -208,6 +208,14 @@ list(APPEND CLDLL_SOURCES
 	voice_status.cpp
 )
 
+list(APPEND CLDLL_SOURCES
+  glew/include/GL/eglew.h
+  glew/include/GL/glew.h
+  glew/include/GL/glxew.h
+  glew/include/GL/wglew.h
+	glew/src/glew.c
+)
+
 include_directories (. hl/ ../dlls ../dlls/wpn_shared ../common ../engine ../pm_shared ../game_shared ../public particleman/)
 
 if (GOLDSOURCE_SUPPORT)
@@ -232,6 +240,19 @@ if(WIN32)
 		target_link_libraries( ${CLDLL_LIBRARY} winmm.lib )
 	endif()
 endif()
+
+# for some reason it can't find these libraries, even when installed?
+if (LINUX)
+	set(OPENGL_gl_LIBRARY /usr/lib/i386-linux-gnu/libGL.so)
+	set(OPENGL_glx_LIBRARY /usr/lib/i386-linux-gnu/libGLX.so)
+endif()
+
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${CLDLL_LIBRARY} ${OPENGL_LIBRARIES})
+target_include_directories(${CLDLL_LIBRARY} PUBLIC ${OPENGL_INCLUDE_DIR})
+
+include_directories(glew/include)
 
 set_target_properties (${CLDLL_LIBRARY} PROPERTIES
 	POSITION_INDEPENDENT_CODE 1)
