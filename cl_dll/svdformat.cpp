@@ -349,7 +349,11 @@ svdheader_t* SVD_Create( char* filename, model_t* pmodel )
 	}
 
 	// Save the data to the disk
+#ifdef _WIN32
 	char outPath[_MAX_PATH];
+#else
+	char outPath[PATH_MAX];
+#endif
 	sprintf(outPath, "%s/%s", gEngfuncs.pfnGetGameDirectory(), filename);
 
 	FILE *pFile = fopen(outPath, "wb");
@@ -382,7 +386,11 @@ bool SVD_LoadSVDForModel( model_t* pmodel )
 		return false;
 
 	// Try and load the model from the disk
+#ifdef _WIN32
 	char outName[_MAX_PATH];
+#else
+	char outName[PATH_MAX];
+#endif
 	strcpy(outName, pmodel->name);
 	strcpy(&outName[strlen(outName)-3], "svd");
 
