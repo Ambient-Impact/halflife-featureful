@@ -40,11 +40,6 @@
 #define GLEW_STATIC 1
 #include "GL/glew.h"
 
-// @see https://stackoverflow.com/questions/8897791/how-to-define-forceinline-inline
-#ifndef __forceinline
-#define __forceinline inline __attribute__((always_inline))
-#endif
-
 // msurface_t struct size
 extern int g_msurfaceStructSize;
 
@@ -58,7 +53,7 @@ void VectorRotate(const Vector& in1, float in2[3][4], Vector& out)
 	out[2] = DotProduct(in1, in2[2]);
 }
 
-__forceinline float Q_rsqrt(float number)
+float Q_rsqrt(float number)
 {
 	long i;
 	float x2, y;
