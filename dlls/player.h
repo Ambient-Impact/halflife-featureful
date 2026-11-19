@@ -458,6 +458,8 @@ public:
 	void MakeStartFollowing(CFollowingMonster* pMonster);
 	void MakeStopFollowing(CFollowingMonster* pMonster);
 
+	void InitializeEntities();
+
 	float m_flStartCharge;
 	float m_flAmmoStartCharge;
 	float m_flPlayAftershock;
@@ -486,6 +488,8 @@ public:
 	void SetPrefsFromUserinfo( char *infobuffer );
 
 	float m_flNextChatTime;
+
+	bool m_sentInitMessages;
 
 	int m_iAutoWepSwitch;
 

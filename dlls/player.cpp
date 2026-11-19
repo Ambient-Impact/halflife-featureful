@@ -267,6 +267,8 @@ int gmsgStatusText = 0;
 int gmsgStatusValue = 0;
 int gmsgStatusIcon = 0;
 
+int gmsgLightSource = 0;
+
 int gmsgRandomGibs = 0;
 int gmsgMuzzleLight = 0;
 int gmsgCustomBeam = 0;
@@ -398,6 +400,8 @@ void LinkUserMessages()
 	gmsgStatusText = REG_USER_MSG( "StatusText", -1 );
 	gmsgStatusValue = REG_USER_MSG( "StatusValue", 3 );
 	gmsgStatusIcon = REG_USER_MSG( "StatusIcon", -1 );
+
+	gmsgLightSource = REG_USER_MSG("LightSource", -1);
 
 	gmsgRandomGibs = REG_USER_MSG( "RandomGibs", 27 );
 	gmsgMuzzleLight = REG_USER_MSG( "MuzzleLight", 6 );
@@ -4464,6 +4468,8 @@ void CBasePlayer::Precache()
 	// SOUNDS / MODELS ARE PRECACHED in ClientPrecache() (game specific)
 	// because they need to precache before any clients have connected
 
+	m_sentInitMessages = false;
+
 	// init geiger counter vars during spawn and each time
 	// we cross a level transition
 
@@ -5634,6 +5640,13 @@ reflecting all of the HUD state info.
 */
 void CBasePlayer::UpdateClientData()
 {
+
+	if (!m_sentInitMessages)
+	{
+		InitializeEntities();
+		m_sentInitMessages = true;
+	}
+
 	if( m_fInitHUD )
 	{
 		m_fInitHUD = false;
@@ -6298,6 +6311,27 @@ void CBasePlayer::UpdateClientData()
 			m_ClientToolStateBits = m_ToolStateBits;
 			m_ClientToolUnalignedBits = m_ToolUnalignedBits;
 		}
+	}
+}
+
+//=========================================================
+// InitializeEntities
+//=========================================================
+void CBasePlayer ::InitializeEntities(void)
+{
+	edict_t* pEdict = g_engfuncs.pfnPEntityOfEntIndex(1);
+	CBaseEntity* pEntity;
+
+	for (int i = 0; i < gpGlobals->maxEntities; i++, pEdict++)
+	{
+		if (pEdict->free)
+			continue;
+
+		pEntity = CBaseEntity::Instance(pEdict);
+		if (!pEntity)
+			break;
+
+		pEntity->SendInitMessages(this);
 	}
 }
 
