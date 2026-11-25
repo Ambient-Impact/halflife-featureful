@@ -233,7 +233,7 @@ GetLightList
 void CLightList::GetLightList( Vector& origin, const Vector& mins, const Vector& maxs, elight_t** lightArray, unsigned int* numLights )
 {
 	// Set this to zero
-	*numLights = NULL;
+	*numLights = 0;
 
 	gEngfuncs.pEventAPI->EV_SetTraceHull( 2 );
 

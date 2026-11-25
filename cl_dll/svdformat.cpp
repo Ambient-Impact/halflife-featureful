@@ -480,7 +480,7 @@ void SVD_Clear( void )
 		g_pSVDHeaders[i] = NULL;
 	}
 
-	g_iNumSVDFiles = NULL;
+	g_iNumSVDFiles = 0;
 
 	// Flag for next load
 	g_bNeedLoadSVD = true;
