@@ -276,7 +276,7 @@ void CStudioModelRenderer::StudioSetupShadows()
 		m_vShadowLightVector = shadeVector;
 		m_shadowLightType = SL_TYPE_LIGHTVECTOR;
 	}
-	else
+	else if (m_pEntityLights[m_iClosestLight] != NULL)
 	{
 		elight_t* plight = m_pEntityLights[m_iClosestLight];
 		m_vShadowLightOrigin = plight->origin;
