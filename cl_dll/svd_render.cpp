@@ -711,7 +711,11 @@ void SVD_DrawTransparentTriangles ( void )
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glColor4f(GL_ZERO, GL_ZERO, GL_ZERO, 0.5);
-	glDepthFunc(GL_EQUAL);
+
+	// Next three required to avoid z-fighting with gl_use_shaders 1.
+  glDepthFunc(GL_LEQUAL);
+  glEnable(GL_POLYGON_OFFSET_FILL);
+  glPolygonOffset(-1.0f, -2.0f);
 
 	glStencilFunc(GL_NOTEQUAL, 0, ~0);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -757,6 +761,8 @@ void SVD_DrawTransparentTriangles ( void )
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glDisable(GL_STENCIL_TEST);
+	// Also required to avoid z-fighting with gl_use_shaders 1.
+	glDisable(GL_POLYGON_OFFSET_FILL);
 	glDepthFunc(GL_LEQUAL);
 
 	glPopAttrib();
