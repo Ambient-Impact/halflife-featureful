@@ -239,6 +239,11 @@ void CStudioModelRenderer::StudioSetupShadows()
 	if( IEngineStudio.IsHardware() != 1 )
 		return;	
 	
+	// Ensure light sources are fetched in the normal path as otherwise this would
+	// only get called in the player viewpoint and fullbright path, resulting in
+	// unexpected shadow changes as you move around.
+	StudioGetLightSources();
+
 	// Determine the shading angle
 	if(m_iClosestLight == -1)
 	{
@@ -324,15 +329,31 @@ bool CStudioModelRenderer::StudioShouldDrawShadow()
 	if(m_pCurrentEntity->curstate.renderfx == kRenderFxNoShadow)
 		return false;
 
-	// Fucking butt-ugly hack to make the shadows less annoying
-	pmtrace_t tr;
-	gEngfuncs.pEventAPI->EV_SetTraceHull( 2 );
-	gEngfuncs.pEventAPI->EV_PlayerTrace( m_vRenderOrigin, m_pCurrentEntity->origin+Vector(0, 0, 1), PM_WORLD_ONLY, -1, &tr);
+	// This originally tested against only a single point from the player's
+	// viewpoint to the model's origin, which would cause certain models to hide
+	// their shadow constantly. For example, scientists sitting in chairs in
+	// Anomalous Materials or the intro desk Barney, due to their origin often
+	// being blocked by the base of the chair brushes. This traces multiple
+	// points near the origin and hides only if none of them are visible.
 
-	if(tr.fraction != 1.0)
-		return false;
+  Vector mins, maxs;
+  StudioGetMinsMaxs(mins, maxs);
+  Vector center = (mins + maxs) * 0.5f;
+  Vector points[3] = {
+      m_pCurrentEntity->origin + Vector(0, 0, 1),
+      center,
+      Vector(center.x, center.y, maxs.z - 1),
+  };
 
-	return true;
+  gEngfuncs.pEventAPI->EV_SetTraceHull(2);
+  for (int i = 0; i < 3; i++)
+  {
+      pmtrace_t tr;
+      gEngfuncs.pEventAPI->EV_PlayerTrace(m_vRenderOrigin, points[i], PM_WORLD_ONLY, -1, &tr);
+      if (tr.fraction == 1.0f)
+          return true;
+  }
+  return false;
 }
 
 /*
