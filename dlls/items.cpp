@@ -1530,8 +1530,6 @@ void CEyeScanner::Precache()
 		PRECACHE_SOUND(STRING(pev->noise1));
 	if (!FStringNull(pev->noise2))
 		PRECACHE_SOUND(STRING(pev->noise2));
-
-	SetActivity( m_Activity );
 }
 
 void CEyeScanner::PlayBeep()
